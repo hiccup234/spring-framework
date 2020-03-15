@@ -112,6 +112,9 @@ public interface BeanFactory {
 	 * {@code myJndiObject} is a FactoryBean, getting {@code &myJndiObject}
 	 * will return the factory, not the instance returned by the factory.
 	 */
+	/**
+	 * TODO 获取FactoryBean对象本身时，在配置的beanName前加 “&” 即可
+	 */
 	String FACTORY_BEAN_PREFIX = "&";
 
 
@@ -127,6 +130,9 @@ public interface BeanFactory {
 	 * @throws NoSuchBeanDefinitionException if there is no bean definition
 	 * with the specified name
 	 * @throws BeansException if the bean could not be obtained
+	 */
+	/**
+	 * TODO 为什么提供的不是 <T> T getBean(String name)呢？
 	 */
 	Object getBean(String name) throws BeansException;
 
@@ -164,6 +170,9 @@ public interface BeanFactory {
 	 * @throws BeansException if the bean could not be created
 	 * @since 3.0
 	 * @see ListableBeanFactory
+	 */
+	/**
+	 * TODO 类型匹配 byType
 	 */
 	<T> T getBean(Class<T> requiredType) throws BeansException;
 
