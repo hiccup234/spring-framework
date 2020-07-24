@@ -199,11 +199,11 @@ configure(subprojects - project(":spring-build-src")) { subproject ->
 		jacoco("org.jacoco:org.jacoco.agent:0.7.1.201405082137:runtime")
 	}
 
-	gradle.taskGraph.whenReady {taskGraph ->
-		if (taskGraph.hasTask(':sonarRunner')) {
-			test.jvmArgs "-javaagent:${configurations.jacoco.asPath}=destfile=${buildDir}/jacoco.exec,includes=org.springframework.*"
-		}
-	}
+//	gradle.taskGraph.whenReady {taskGraph ->
+//		if (taskGraph.hasTask(':sonarRunner')) {
+//			test.jvmArgs "-javaagent:${configurations.jacoco.asPath}=destfile=${buildDir}/jacoco.exec,includes=org.springframework.*"
+//		}
+//	}
 
 	jar {
 		manifest.attributes["Created-By"] =
@@ -1083,21 +1083,21 @@ project("spring-framework-bom") {
 	}
 }
 
-apply plugin: 'sonar-runner'
+//apply plugin: 'sonar-runner'
 
-sonarRunner {
-	sonarProperties {
-		property "sonar.projectName", "Spring Framework"
-		property "sonar.profile", "Spring Framework"
-		property "sonar.jacoco.reportPath", "${buildDir.name}/jacoco.exec"
-		property "sonar.links.homepage", linkHomepage
-		property "sonar.links.ci", linkCi
-		property "sonar.links.issue", linkIssue
-		property "sonar.links.scm", linkScmUrl
-		property "sonar.links.scm_dev", linkScmDevConnection
-		property "sonar.java.coveragePlugin", "jacoco"
-	}
-}
+//sonarRunner {
+//	sonarProperties {
+//		property "sonar.projectName", "Spring Framework"
+//		property "sonar.profile", "Spring Framework"
+//		property "sonar.jacoco.reportPath", "${buildDir.name}/jacoco.exec"
+//		property "sonar.links.homepage", linkHomepage
+//		property "sonar.links.ci", linkCi
+//		property "sonar.links.issue", linkIssue
+//		property "sonar.links.scm", linkScmUrl
+//		property "sonar.links.scm_dev", linkScmDevConnection
+//		property "sonar.java.coveragePlugin", "jacoco"
+//	}
+//}
 
 configure(rootProject) {
 	description = "Spring Framework"
@@ -1345,20 +1345,20 @@ configure(rootProject) {
 
 }
 
-configure([project(':spring-build-src'), project(':spring-framework-bom')]) {
-	sonarRunner {
-		skipProject = true
-	}
-}
-
-configure(project(':spring-core')) {
-	sonarRunner {
-		sonarProperties {
-			property "sonar.exclusions",
-					"src/main/java/org/springframework/cglib/**/*,src/main/java/org/springframework/asm/**/*"
-		}
-	}
-}
+//configure([project(':spring-build-src'), project(':spring-framework-bom')]) {
+//	sonarRunner {
+//		skipProject = true
+//	}
+//}
+//
+//configure(project(':spring-core')) {
+//	sonarRunner {
+//		sonarProperties {
+//			property "sonar.exclusions",
+//					"src/main/java/org/springframework/cglib/**/*,src/main/java/org/springframework/asm/**/*"
+//		}
+//	}
+//}
 
 /*
  * Support publication of artifacts versioned by topic branch.

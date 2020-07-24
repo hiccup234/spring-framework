@@ -50,6 +50,10 @@ package org.springframework.beans.factory;
  * @see org.springframework.aop.framework.ProxyFactoryBean
  * @see org.springframework.jndi.JndiObjectFactoryBean
  */
+
+/**
+ * TODO 工厂Bean，在IOC容器中getBean时返回的不是工厂Bean本身，而是其生产的T类型的Bean
+ */
 public interface FactoryBean<T> {
 
 	/**
