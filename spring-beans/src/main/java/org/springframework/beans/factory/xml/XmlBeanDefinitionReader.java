@@ -329,6 +329,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 		try {
 			InputStream inputStream = encodedResource.getResource().getInputStream();
 			try {
+				// 这里的InputSource全路径是：org.xml.sax.InputSource，不是Spring自己定义的
 				InputSource inputSource = new InputSource(inputStream);
 				if (encodedResource.getEncoding() != null) {
 					inputSource.setEncoding(encodedResource.getEncoding());
@@ -440,9 +441,11 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	 */
 	protected int getValidationModeForResource(Resource resource) {
 		int validationModeToUse = getValidationMode();
+		// 如果手动指定了xml文件的验证模式则用指定的
 		if (validationModeToUse != VALIDATION_AUTO) {
 			return validationModeToUse;
 		}
+		// 没指定则根据readLine中是否包含“DOCTYPE”来判断是DTD还是XSD
 		int detectedMode = detectValidationMode(resource);
 		if (detectedMode != VALIDATION_AUTO) {
 			return detectedMode;
@@ -451,6 +454,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 		// since apparently no DTD declaration has been found up until
 		// detection stopped (before finding the document's root tag).
 		return VALIDATION_XSD;
+		// Hmm, 哈哈哈哈哈
 	}
 
 	/**
