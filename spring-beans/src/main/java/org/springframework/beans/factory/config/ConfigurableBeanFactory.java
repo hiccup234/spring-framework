@@ -47,6 +47,10 @@ import org.springframework.util.StringValueResolver;
  * @see org.springframework.beans.factory.ListableBeanFactory
  * @see ConfigurableListableBeanFactory
  */
+
+/**
+ * 可配置化的BeanFactory，如设置自定义的ClassLoader\Resolver\TypeConverter等，非常重要的一个接口
+ */
 public interface ConfigurableBeanFactory extends HierarchicalBeanFactory, SingletonBeanRegistry {
 
 	/**

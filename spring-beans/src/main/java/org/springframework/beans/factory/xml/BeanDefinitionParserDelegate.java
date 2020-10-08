@@ -84,6 +84,7 @@ import org.springframework.util.xml.DomUtils;
  */
 public class BeanDefinitionParserDelegate {
 
+	// beans的默认名称空间
 	public static final String BEANS_NAMESPACE_URI = "http://www.springframework.org/schema/beans";
 
 	public static final String MULTI_VALUE_ATTRIBUTE_DELIMITERS = ",; ";
@@ -243,6 +244,7 @@ public class BeanDefinitionParserDelegate {
 
 	private final DocumentDefaultsDefinition defaults = new DocumentDefaultsDefinition();
 
+	// fixme parseState是用来解决循环依赖的吗？
 	private final ParseState parseState = new ParseState();
 
 	/**
@@ -443,7 +445,8 @@ public class BeanDefinitionParserDelegate {
 			aliases.addAll(Arrays.asList(nameArr));
 		}
 
-		String beanName = id;
+		// 注意，从这以后不再有id的概念（id是XML节点的概念），Spring容器中以beanName作唯一区分
+	    String beanName = id;
 		if (!StringUtils.hasText(beanName) && !aliases.isEmpty()) {
 			beanName = aliases.remove(0);
 			if (logger.isDebugEnabled()) {
@@ -460,6 +463,7 @@ public class BeanDefinitionParserDelegate {
 		if (beanDefinition != null) {
 			if (!StringUtils.hasText(beanName)) {
 				try {
+					// 生成默认的beanName
 					if (containingBean != null) {
 						beanName = BeanDefinitionReaderUtils.generateBeanName(
 								beanDefinition, this.readerContext.getRegistry(), true);
@@ -533,15 +537,26 @@ public class BeanDefinitionParserDelegate {
 			if (ele.hasAttribute(PARENT_ATTRIBUTE)) {
 				parent = ele.getAttribute(PARENT_ATTRIBUTE);
 			}
+			// 这里真正创建了BeanDefinition
 			AbstractBeanDefinition bd = createBeanDefinition(className, parent);
 
+			// 解析bean节点的各种属性，如scope/init-method/depends-on
 			parseBeanDefinitionAttributes(ele, beanName, containingBean, bd);
 			bd.setDescription(DomUtils.getChildElementValueByTagName(ele, DESCRIPTION_ELEMENT));
 
+			//    <bean id="user" class="top.hiccup.spring.test.User">
+			//        <meta key="k1" value="v1"/>
+			//    </bean>
 			parseMetaElements(ele, bd);
+			// 解析lookup-method子节点，获取器注入，即把lookup-method方法返回的bean注入到容器中
+			//    <bean id="user" class="top.hiccup.spring.test.User">
+			//        <lookup-method name="getLocalBean" bean="localUser"/>
+			//    </bean>
 			parseLookupOverrideSubElements(ele, bd.getMethodOverrides());
+			// 解析replaced-method属性，同lookup-method
 			parseReplacedMethodSubElements(ele, bd.getMethodOverrides());
 
+			// 构造方法的解析非常复杂
 			parseConstructorArgElements(ele, bd);
 			parsePropertyElements(ele, bd);
 			parseQualifierElements(ele, bd);

@@ -56,9 +56,11 @@ public class BeanDefinitionReaderUtils {
 	public static AbstractBeanDefinition createBeanDefinition(
 			String parentName, String className, ClassLoader classLoader) throws ClassNotFoundException {
 
+		// Spring有3种BeanDefinition:RootBeanDefinition/ChildBeanDefinition/GenericBeanDefinition
 		GenericBeanDefinition bd = new GenericBeanDefinition();
 		bd.setParentName(parentName);
 		if (className != null) {
+			// fixme 这两个方法有点奇怪，都是改的同一个属性beanClass，为什么这样写呢？
 			if (classLoader != null) {
 				bd.setBeanClass(ClassUtils.forName(className, classLoader));
 			}

@@ -134,7 +134,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	 */
 	public static final String INFER_METHOD = "(inferred)";
 
-
+	// fixme 可以把Object换成T吗？
 	private volatile Object beanClass;
 
 	private String scope = SCOPE_DEFAULT;
@@ -145,6 +145,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 
 	private int autowireMode = AUTOWIRE_NO;
 
+	// Spring 3.0 后弃用
 	private int dependencyCheck = DEPENDENCY_CHECK_NONE;
 
 	private String[] dependsOn;
@@ -345,6 +346,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	 */
 	@Override
 	public String getBeanClassName() {
+		// fixme 不能分开两个字段吗？
 		Object beanClassObject = this.beanClass;
 		if (beanClassObject instanceof Class) {
 			return ((Class<?>) beanClassObject).getName();

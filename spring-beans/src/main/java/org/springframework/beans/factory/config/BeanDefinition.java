@@ -36,6 +36,10 @@ import org.springframework.core.AttributeAccessor;
  * @see org.springframework.beans.factory.support.RootBeanDefinition
  * @see org.springframework.beans.factory.support.ChildBeanDefinition
  */
+
+/**
+ * BeanDefinition是<bean>标签在Spring容器中的内部表示形式
+ */
 public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 
 	/**
