@@ -51,7 +51,7 @@ public interface InputStreamSource {
 	 * @throws java.io.FileNotFoundException if the underlying resource doesn't exist
 	 * @throws IOException if the content stream could not be opened
 	 */
-	// 这里的InputStream是Java的类
+	// 这里的InputStream是JDK的类
 	InputStream getInputStream() throws IOException;
 
 }

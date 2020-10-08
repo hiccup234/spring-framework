@@ -114,6 +114,7 @@ public class XmlValidationModeDetector {
 			return VALIDATION_AUTO;
 		}
 		finally {
+			// 这里只是关闭了装饰的BufferedReader和InputStreamReader，而inputStream并没有被关闭
 			reader.close();
 		}
 	}

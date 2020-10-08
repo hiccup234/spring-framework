@@ -54,6 +54,7 @@ public interface AliasRegistry {
 	 * @param name the name to check for aliases
 	 * @return the aliases, or an empty array if none
 	 */
+	// 一个name可能有多个别名
 	String[] getAliases(String name);
 
 }

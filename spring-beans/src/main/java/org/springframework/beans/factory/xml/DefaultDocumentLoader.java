@@ -68,6 +68,9 @@ public class DefaultDocumentLoader implements DocumentLoader {
 	public Document loadDocument(InputSource inputSource, EntityResolver entityResolver,
 			ErrorHandler errorHandler, int validationMode, boolean namespaceAware) throws Exception {
 
+		// Spring采用了JDK原生的JAXP来解析xml而不是dom4j，而且这3大步骤看起来是采用的dom而不是sax解析方式
+		// 但是为什么有的书上说是采用sax的解析方式？而且很多地方确实抛出的是SAX**异常，很疑惑
+		// sax解析应该是要有SAXParserFactory和SAXParser的
 		DocumentBuilderFactory factory = createDocumentBuilderFactory(validationMode, namespaceAware);
 		if (logger.isDebugEnabled()) {
 			logger.debug("Using JAXP provider [" + factory.getClass().getName() + "]");

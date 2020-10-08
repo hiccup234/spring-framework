@@ -850,6 +850,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 				}
 			}
 			else {
+				// 至此bean的解析已完成，放入beanDefinitionMap中，所以可以理解Spring容器就是一个大的ConcurrentHashMap
 				// Still in startup registration phase
 				this.beanDefinitionMap.put(beanName, beanDefinition);
 				this.beanDefinitionNames.add(beanName);

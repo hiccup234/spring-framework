@@ -62,6 +62,7 @@ public class SimpleAliasRegistry implements AliasRegistry {
 					}
 				}
 				checkForAliasCircle(name, alias);
+				// 注意：别名是key，原始name是value，所以可以允许一个name有多个别名
 				this.aliasMap.put(alias, name);
 			}
 		}
@@ -129,6 +130,7 @@ public class SimpleAliasRegistry implements AliasRegistry {
 			if (registeredName.equals(name)) {
 				String alias = entry.getKey();
 				result.add(alias);
+				// 递归下去，找到所有别名的别名
 				retrieveAliases(alias, result);
 			}
 		}

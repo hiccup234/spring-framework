@@ -114,15 +114,17 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 
 	private NamespaceHandlerResolver namespaceHandlerResolver;
 
+	// 直接使用了默认的DefaultDocumentLoader，采用JAXP解析工具解析
 	private DocumentLoader documentLoader = new DefaultDocumentLoader();
 
 	private EntityResolver entityResolver;
 
 	private ErrorHandler errorHandler = new SimpleSaxErrorHandler(logger);
 
+	// xml验证模式探测器，决定是dtd还是xsd
 	private final XmlValidationModeDetector validationModeDetector = new XmlValidationModeDetector();
 
-	// 线程变量，Spring允许多个线程通知启动吗？
+	// 线程变量，Spring允许多个线程同时启动吗？（Spring容器的线程安全问题很少在书中提起）
 	private final ThreadLocal<Set<EncodedResource>> resourcesCurrentlyBeingLoaded =
 			new NamedThreadLocal<Set<EncodedResource>>("XML bean definition resources currently being loaded");
 
