@@ -435,6 +435,7 @@ public class BeanDefinitionParserDelegate {
 	 * if there were errors during parse. Errors are reported to the
 	 * {@link org.springframework.beans.factory.parsing.ProblemReporter}.
 	 */
+	// 解析出单个<bean>节点对应的BeanDefinition
 	public BeanDefinitionHolder parseBeanDefinitionElement(Element ele, BeanDefinition containingBean) {
 		String id = ele.getAttribute(ID_ATTRIBUTE);
 		String nameAttr = ele.getAttribute(NAME_ATTRIBUTE);
@@ -445,7 +446,7 @@ public class BeanDefinitionParserDelegate {
 			aliases.addAll(Arrays.asList(nameArr));
 		}
 
-		// 注意，从这以后不再有id的概念（id是XML节点的概念），Spring容器中以beanName作唯一区分
+		// 注意，从这以后不再有id的概念（id是XML节点的概念），Spring容器中以beanName作为唯一区分
 	    String beanName = id;
 		if (!StringUtils.hasText(beanName) && !aliases.isEmpty()) {
 			beanName = aliases.remove(0);
@@ -1013,6 +1014,7 @@ public class BeanDefinitionParserDelegate {
 			valueHolder.setSource(extractSource(ele));
 			return valueHolder;
 		}
+		// 如果没有配ref/value这两个属性才看是否有子节点
 		else if (subElement != null) {
 			return parsePropertySubElement(subElement, bd);
 		}
@@ -1473,6 +1475,7 @@ public class BeanDefinitionParserDelegate {
 		BeanDefinitionHolder finalDefinition = originalDef;
 
 		// Decorate based on custom attributes first.
+		// 可能存在如p名称空间，直接配置在属性里
 		NamedNodeMap attributes = ele.getAttributes();
 		for (int i = 0; i < attributes.getLength(); i++) {
 			Node node = attributes.item(i);
@@ -1502,6 +1505,7 @@ public class BeanDefinitionParserDelegate {
 			Node node, BeanDefinitionHolder originalDef, BeanDefinition containingBd) {
 
 		String namespaceUri = getNamespaceURI(node);
+		// 不是默认的名称空间才装饰
 		if (!isDefaultNamespace(namespaceUri)) {
 			NamespaceHandler handler = this.readerContext.getNamespaceHandlerResolver().resolve(namespaceUri);
 			if (handler != null) {

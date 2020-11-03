@@ -35,6 +35,10 @@ import org.springframework.util.Assert;
  * @see BeansDtdResolver
  * @see PluggableSchemaResolver
  */
+
+/**
+ * 委派实体解析器：dtd委派给BeansDtdResolver，xsd委派给PluggableSchemaResolver（可插拔的）
+ */
 public class DelegatingEntityResolver implements EntityResolver {
 
 	/** Suffix for DTD files */

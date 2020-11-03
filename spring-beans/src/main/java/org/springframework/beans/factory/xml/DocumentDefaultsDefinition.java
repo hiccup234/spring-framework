@@ -26,6 +26,10 @@ import org.springframework.beans.factory.parsing.DefaultsDefinition;
  * @author Juergen Hoeller
  * @since 2.0.2
  */
+
+/**
+ * 主要用来存储<beans>节点的默认属性，注意是<beans>
+ */
 public class DocumentDefaultsDefinition implements DefaultsDefinition {
 
 	private String lazyInit;

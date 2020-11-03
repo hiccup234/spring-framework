@@ -54,6 +54,10 @@ import org.springframework.util.StringUtils;
  * @author Erik Wiersma
  * @since 18.12.2003
  */
+
+/**
+ * Spring同样也只有这一个默认的BeanDefinitionDocumentReader实现
+ */
 public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocumentReader {
 
 	public static final String BEAN_ELEMENT = BeanDefinitionParserDelegate.BEAN_ELEMENT;
@@ -90,6 +94,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 	public void registerBeanDefinitions(Document doc, XmlReaderContext readerContext) {
 		this.readerContext = readerContext;
 		logger.debug("Loading bean definitions");
+		// xml的根节点<beans>
 		Element root = doc.getDocumentElement();
 		doRegisterBeanDefinitions(root);
 	}
@@ -139,8 +144,11 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 			}
 		}
 
+		// 预留的扩展回调
 		preProcessXml(root);
+		// 解析<beans>节点
 		parseBeanDefinitions(root, this.delegate);
+		// 预留的扩展回调
 		postProcessXml(root);
 
 		this.delegate = parent;
@@ -150,6 +158,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 			XmlReaderContext readerContext, Element root, BeanDefinitionParserDelegate parentDelegate) {
 
 		BeanDefinitionParserDelegate delegate = new BeanDefinitionParserDelegate(readerContext);
+		// 加载<beans>节点的默认属性
 		delegate.initDefaults(root, parentDelegate);
 		return delegate;
 	}
@@ -165,19 +174,21 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 			NodeList nl = root.getChildNodes();
 			for (int i = 0; i < nl.getLength(); i++) {
 				Node node = nl.item(i);
+				// 也有可能是DeferredTextImpl类型
 				if (node instanceof Element) {
 					Element ele = (Element) node;
 					if (delegate.isDefaultNamespace(ele)) {
 						// 只处理4种标签：import/alias/bean/beans(嵌套的)
 						parseDefaultElement(ele, delegate);
 					}
+					// 默认标签里也可以有自定义标签
 					else {
 						delegate.parseCustomElement(ele);
 					}
 				}
 			}
 		}
-		// 不是，则为自定义标签（context/tx/aop等）
+		// 不是，则按自定义标签解析（context/tx/aop等）
 		else {
 			delegate.parseCustomElement(root);
 		}
@@ -195,6 +206,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 		}
 		else if (delegate.nodeNameEquals(ele, NESTED_BEANS_ELEMENT)) {
 			// recurse
+			// 嵌套的<beans>声明，直接递归调用
 			doRegisterBeanDefinitions(ele);
 		}
 	}
@@ -228,6 +240,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 		// Absolute or relative?
 		if (absoluteLocation) {
 			try {
+				// 重新调用XmlBeanDefinitionReader的loadBeanDefinitions（单独解析的xml）
 				int importCount = getReaderContext().getReader().loadBeanDefinitions(location, actualResources);
 				if (logger.isDebugEnabled()) {
 					logger.debug("Imported " + importCount + " bean definitions from URL location [" + location + "]");

@@ -86,6 +86,7 @@ public abstract class AbstractBeanDefinitionReader implements EnvironmentCapable
 			this.resourceLoader = (ResourceLoader) this.registry;
 		}
 		else {
+			// 路径匹配资源正则解析器
 			this.resourceLoader = new PathMatchingResourcePatternResolver();
 		}
 

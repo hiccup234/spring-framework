@@ -40,6 +40,10 @@ import org.springframework.util.StringUtils;
  * @see ClassLoader#getResourceAsStream(String)
  * @see Class#getResourceAsStream(String)
  */
+
+/**
+ * 对类路径下资源的简单封装：底层还是依靠classLoader.getResourceAsStream来获取InputStream
+ */
 public class ClassPathResource extends AbstractFileResolvingResource {
 
 	private final String path;

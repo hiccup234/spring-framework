@@ -95,6 +95,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	private final Set<String> registeredSingletons = new LinkedHashSet<String>(256);
 
 	/** Names of beans that are currently in creation */
+	// 解决bean的循环依赖问题
 	private final Set<String> singletonsCurrentlyInCreation =
 			Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>(16));
 
@@ -149,6 +150,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 		}
 	}
 
+	// 解决单例时的循环引用问题
 	/**
 	 * Add the given singleton factory for building the specified singleton
 	 * if necessary.

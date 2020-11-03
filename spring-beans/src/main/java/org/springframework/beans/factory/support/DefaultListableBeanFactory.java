@@ -838,6 +838,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 				// Cannot modify startup-time collection elements anymore (for stable iteration)
 				synchronized (this.beanDefinitionMap) {
 					this.beanDefinitionMap.put(beanName, beanDefinition);
+					// 为了线程安全才这样写的嚒？copyonwrite?
 					List<String> updatedDefinitions = new ArrayList<String>(this.beanDefinitionNames.size() + 1);
 					updatedDefinitions.addAll(this.beanDefinitionNames);
 					updatedDefinitions.add(beanName);

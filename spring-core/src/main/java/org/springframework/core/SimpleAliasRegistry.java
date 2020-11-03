@@ -35,6 +35,10 @@ import org.springframework.util.StringValueResolver;
  * @author Juergen Hoeller
  * @since 2.5.2
  */
+
+/**
+ * 简单别名注册中心，用ConcurrentHashMap存别名和原名，其实Spring里功能上的AliasRegistry也就这么一个实现了
+ */
 public class SimpleAliasRegistry implements AliasRegistry {
 
 	/** Map from alias to canonical name */
@@ -45,6 +49,7 @@ public class SimpleAliasRegistry implements AliasRegistry {
 	public void registerAlias(String name, String alias) {
 		Assert.hasText(name, "'name' must not be empty");
 		Assert.hasText(alias, "'alias' must not be empty");
+		// 这里必须要加锁，防止出现checkForAliasCircle
 		synchronized (this.aliasMap) {
 			if (alias.equals(name)) {
 				this.aliasMap.remove(alias);
@@ -188,6 +193,7 @@ public class SimpleAliasRegistry implements AliasRegistry {
 	 * @see #hasAlias
 	 */
 	protected void checkForAliasCircle(String name, String alias) {
+		// 防止出现死递归
 		if (hasAlias(alias, name)) {
 			throw new IllegalStateException("Cannot register alias '" + alias +
 					"' for name '" + name + "': Circular reference - '" +

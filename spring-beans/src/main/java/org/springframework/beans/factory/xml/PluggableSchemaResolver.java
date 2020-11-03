@@ -115,6 +115,7 @@ public class PluggableSchemaResolver implements EntityResolver {
 				resourceLocation = getSchemaMappings().get("http:" + systemId.substring(6));
 			}
 			if (resourceLocation != null) {
+				// 从classpath加载，防止默认从网络加载
 				Resource resource = new ClassPathResource(resourceLocation, this.classLoader);
 				try {
 					InputSource source = new InputSource(resource.getInputStream());

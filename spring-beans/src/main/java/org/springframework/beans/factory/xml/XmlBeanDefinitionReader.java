@@ -106,10 +106,13 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 
 	private Class<?> documentReaderClass = DefaultBeanDefinitionDocumentReader.class;
 
+	// 跟下面的errorHandler一样没有实际业务逻辑
 	private ProblemReporter problemReporter = new FailFastProblemReporter();
 
+	// 空的EventListener，也是啥都没干
 	private ReaderEventListener eventListener = new EmptyReaderEventListener();
 
+	// 空的资源提取器，也是啥都没干（没太明白这个提取器的设计目的是什么）
 	private SourceExtractor sourceExtractor = new NullSourceExtractor();
 
 	private NamespaceHandlerResolver namespaceHandlerResolver;
@@ -342,6 +345,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 				return doLoadBeanDefinitions(inputSource, encodedResource.getResource());
 			}
 			finally {
+				// 在detectValidationMode打开的inputStream，这里关闭
 				inputStream.close();
 			}
 		}
@@ -394,7 +398,9 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	protected int doLoadBeanDefinitions(InputSource inputSource, Resource resource)
 			throws BeanDefinitionStoreException {
 		try {
+			// 1、根据xml的inputSource加载为Document对象
 			Document doc = doLoadDocument(inputSource, resource);
+			// 2、根据Document对象注册为BeanDefinitions
 			return registerBeanDefinitions(doc, resource);
 		}
 		catch (BeanDefinitionStoreException ex) {
@@ -432,6 +438,11 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	 * @see DocumentLoader#loadDocument
 	 */
 	protected Document doLoadDocument(InputSource inputSource, Resource resource) throws Exception {
+		// 1、EntityResolver的作用是提供一个自定义寻找dtd/sxd声明的方法，否则SAX解析器默认是从URI网络加载
+		// 2、getValidationModeForResource：通过inputStream+readLine判断是DTD还是XSD的校验类型
+		// 3、SAXParserFactory factory=SAXParserFactory.newInstance();
+		//	  factory.setNamespaceAware(false);
+		//    factory.setValidating(true);
 		return this.documentLoader.loadDocument(inputSource, getEntityResolver(), this.errorHandler,
 				getValidationModeForResource(resource), isNamespaceAware());
 	}
@@ -514,6 +525,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	public int registerBeanDefinitions(Document doc, Resource resource) throws BeanDefinitionStoreException {
 		BeanDefinitionDocumentReader documentReader = createBeanDefinitionDocumentReader();
 		int countBefore = getRegistry().getBeanDefinitionCount();
+		// 把注册为BeanDefinitions的工作转给了BeanDefinitionDocumentReader
 		documentReader.registerBeanDefinitions(doc, createReaderContext(resource));
 		return getRegistry().getBeanDefinitionCount() - countBefore;
 	}

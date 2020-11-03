@@ -92,6 +92,7 @@ public class XmlValidationModeDetector {
 		try {
 			boolean isDtdValidated = false;
 			String content;
+			// 整个xml文件在这儿第一次被读取
 			while ((content = reader.readLine()) != null) {
 				content = consumeCommentTokens(content);
 				if (this.inComment || !StringUtils.hasText(content)) {

@@ -44,6 +44,10 @@ import org.springframework.util.xml.XmlValidationModeDetector;
  * @author Juergen Hoeller
  * @since 2.0
  */
+
+/**
+ * Spring也就只有这一个默认的DocumentLoader实现了
+ */
 public class DefaultDocumentLoader implements DocumentLoader {
 
 	/**
@@ -76,6 +80,7 @@ public class DefaultDocumentLoader implements DocumentLoader {
 			logger.debug("Using JAXP provider [" + factory.getClass().getName() + "]");
 		}
 		DocumentBuilder builder = createDocumentBuilder(factory, entityResolver, errorHandler);
+		// 这里除了entityResolver的回调逻辑，其他都是JAXP对xml文件的解析了，不用继续往里面看了
 		return builder.parse(inputSource);
 	}
 

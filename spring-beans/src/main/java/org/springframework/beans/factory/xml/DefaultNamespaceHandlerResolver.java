@@ -46,11 +46,17 @@ import org.springframework.util.CollectionUtils;
  * @see NamespaceHandler
  * @see DefaultBeanDefinitionDocumentReader
  */
+
+/**
+ * Spring同样也只有这一个默认的NamespaceHandlerResolver实现（为什么不叫可插拔式？Pluggable）
+ * 默认的beans名称空间是不是没有专门的解析器啊？
+ */
 public class DefaultNamespaceHandlerResolver implements NamespaceHandlerResolver {
 
 	/**
 	 * The location to look for the mapping files. Can be present in multiple JAR files.
 	 */
+	// 上面这句话很重要：Can be present in multiple JAR files.
 	public static final String DEFAULT_HANDLER_MAPPINGS_LOCATION = "META-INF/spring.handlers";
 
 
@@ -116,6 +122,7 @@ public class DefaultNamespaceHandlerResolver implements NamespaceHandlerResolver
 		if (handlerOrClassName == null) {
 			return null;
 		}
+		// 为什么不分开两个map存呢？，NamespaceHandler对象存一个map，spring.handlers配置存一个map
 		else if (handlerOrClassName instanceof NamespaceHandler) {
 			return (NamespaceHandler) handlerOrClassName;
 		}
@@ -148,6 +155,7 @@ public class DefaultNamespaceHandlerResolver implements NamespaceHandlerResolver
 	 */
 	private Map<String, Object> getHandlerMappings() {
 		Map<String, Object> handlerMappings = this.handlerMappings;
+		// 标准的双检锁，handlerMappings也用volatile修饰了
 		if (handlerMappings == null) {
 			synchronized (this) {
 				handlerMappings = this.handlerMappings;

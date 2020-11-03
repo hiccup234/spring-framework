@@ -68,7 +68,13 @@ public class ResourceEntityResolver extends DelegatingEntityResolver {
 		this.resourceLoader = resourceLoader;
 	}
 
-
+	// dtd的参数是这样的：
+	// publicId : -//SPRING//DTD BEAN//EN
+	// systemId : http://www.springframework.org/dtd/spring-beans.dtd
+	//
+	// xsd的参数是这样的：
+	// publicId : null
+	// systemId : http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
 	@Override
 	public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
 		InputSource source = super.resolveEntity(publicId, systemId);
@@ -76,6 +82,7 @@ public class ResourceEntityResolver extends DelegatingEntityResolver {
 		if (source == null && systemId != null) {
 			String resourcePath = null;
 			try {
+				// 1、试图得到一个正确的资源路径
 				String decodedSystemId = URLDecoder.decode(systemId, "UTF-8");
 				String givenUrl = new URL(decodedSystemId).toString();
 				String systemRootUrl = new File("").toURI().toURL().toString();
@@ -96,6 +103,7 @@ public class ResourceEntityResolver extends DelegatingEntityResolver {
 				if (logger.isTraceEnabled()) {
 					logger.trace("Trying to locate XML entity [" + systemId + "] as resource [" + resourcePath + "]");
 				}
+				// 2、从资源加载器加载（ClassPathLoader在类路径下加载）
 				Resource resource = this.resourceLoader.getResource(resourcePath);
 				source = new InputSource(resource.getInputStream());
 				source.setPublicId(publicId);
@@ -108,9 +116,11 @@ public class ResourceEntityResolver extends DelegatingEntityResolver {
 				// External dtd/xsd lookup via https even for canonical http declaration
 				String url = systemId;
 				if (url.startsWith("http:")) {
+					// 为什么要这样换呢？
 					url = "https:" + url.substring(5);
 				}
 				try {
+					// 3、实在不行只有从网络加载
 					source = new InputSource(new URL(url).openStream());
 					source.setPublicId(publicId);
 					source.setSystemId(systemId);
