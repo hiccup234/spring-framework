@@ -38,6 +38,8 @@ import org.springframework.util.StringValueResolver;
 
 /**
  * 简单别名注册中心，用ConcurrentHashMap存别名和原名，其实Spring里功能上的AliasRegistry也就这么一个实现了
+ *
+ * DefaultListableBeanFactory继承关系里最顶级的父类
  */
 public class SimpleAliasRegistry implements AliasRegistry {
 

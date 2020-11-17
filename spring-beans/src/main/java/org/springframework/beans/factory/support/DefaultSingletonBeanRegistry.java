@@ -70,6 +70,10 @@ import org.springframework.util.StringUtils;
  * @see org.springframework.beans.factory.DisposableBean
  * @see org.springframework.beans.factory.config.ConfigurableBeanFactory
  */
+
+/**
+ * BeanFactory与BeanRegistry的定义怎么区别呢？
+ */
 public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements SingletonBeanRegistry {
 
 	/**
@@ -95,7 +99,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	private final Set<String> registeredSingletons = new LinkedHashSet<String>(256);
 
 	/** Names of beans that are currently in creation */
-	// 解决bean的循环依赖问题
+	// 解决单例bean循环依赖的问题
 	private final Set<String> singletonsCurrentlyInCreation =
 			Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>(16));
 

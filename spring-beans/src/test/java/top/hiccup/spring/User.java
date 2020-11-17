@@ -1,7 +1,7 @@
 package top.hiccup.spring;
 
 /**
- * F
+ * 用户
  *
  * @author wenhy
  * @date 2020/10/2
@@ -28,4 +28,11 @@ public class User {
         this.age = age;
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "name='" + name + '\'' +
+                ", age=" + age +
+                '}';
+    }
 }

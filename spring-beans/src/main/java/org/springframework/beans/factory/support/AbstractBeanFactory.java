@@ -236,6 +236,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			final String name, final Class<T> requiredType, final Object[] args, boolean typeCheckOnly)
 			throws BeansException {
 
+		// 这里的beanName就是Spring容器存储的最原始的名字
+		// FactoryBean把&前缀去掉了，后续是通过入参的name来判断是取FactoryBean本身还是其生产的bean
 		final String beanName = transformedBeanName(name);
 		Object bean;
 
@@ -276,6 +278,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				}
 			}
 
+			// 没看懂这个地方的作用
 			if (!typeCheckOnly) {
 				markBeanAsCreated(beanName);
 			}
@@ -294,6 +297,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 						}
 						registerDependentBean(dep, beanName);
 						try {
+						    // 递归注册依赖的bean
 							getBean(dep);
 						}
 						catch (NoSuchBeanDefinitionException ex) {
@@ -305,6 +309,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 				// Create bean instance.
 				if (mbd.isSingleton()) {
+					// 跟前面245行的getSingleton形成双检锁的设计吗？
 					sharedInstance = getSingleton(beanName, new ObjectFactory<Object>() {
 						@Override
 						public Object getObject() throws BeansException {
@@ -1247,6 +1252,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			throws BeanDefinitionStoreException {
 
 		synchronized (this.mergedBeanDefinitions) {
+		    // mergedBeanDefinition的缩写，其实Spring中没有专门的MergedBeanDefinition模型定义，但确实存在这样的概念
+            // 有个专门的生命周期回调接口：MergedBeanDefinitionPostProcessor
 			RootBeanDefinition mbd = null;
 
 			// Check with full lock now in order to enforce the same merged instance.
@@ -1268,8 +1275,10 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 					// Child bean definition: needs to be merged with parent.
 					BeanDefinition pbd;
 					try {
-						String parentBeanName = transformedBeanName(bd.getParentName());
+					    String parentBeanName = transformedBeanName(bd.getParentName());
+					    // 如果不等说明找到了parentBean，如果等于是什么意思呢？
 						if (!beanName.equals(parentBeanName)) {
+						    // 递归调用getMergedBeanDefinition，获取parentBeanName的mbd
 							pbd = getMergedBeanDefinition(parentBeanName);
 						}
 						else {
@@ -1290,6 +1299,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 					}
 					// Deep copy with overridden values.
 					mbd = new RootBeanDefinition(pbd);
+					// 这个方法很重要，用子类bd覆盖pbd，有助于理解子类对象与父类对象关系
 					mbd.overrideFrom(bd);
 				}
 
