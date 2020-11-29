@@ -153,6 +153,7 @@ public abstract class BeanUtils {
 		catch (InvocationTargetException ex) {
 			throw new BeanInstantiationException(ctor, "Constructor threw exception", ex.getTargetException());
 		}
+		// 这里没有把accessible设置回去啊
 	}
 
 	/**

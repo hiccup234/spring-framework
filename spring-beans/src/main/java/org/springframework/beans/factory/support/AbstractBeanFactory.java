@@ -1451,6 +1451,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				return ClassUtils.forName(className, classLoaderToUse);
 			}
 		}
+		// 最后还是mbd把活干了，最后的最后，还是ClassLoader.loadClass和Class.forName默默承受了所有
 		return mbd.resolveBeanClass(beanClassLoader);
 	}
 
