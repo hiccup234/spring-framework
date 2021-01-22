@@ -109,6 +109,8 @@ public abstract class SpringFactoriesLoader {
 	public static List<String> loadFactoryNames(Class<?> factoryClass, ClassLoader classLoader) {
 		String factoryClassName = factoryClass.getName();
 		try {
+			// spring.factories文件的格式为：key=value1,value2,value3
+			// 从所有jar文件中找到MET-INF/spring.factories文件（注意是：classpath下的所有jar包，所以可插拔、扩展性超强）
 			Enumeration<URL> urls = (classLoader != null ? classLoader.getResources(FACTORIES_RESOURCE_LOCATION) :
 					ClassLoader.getSystemResources(FACTORIES_RESOURCE_LOCATION));
 			List<String> result = new ArrayList<String>();
